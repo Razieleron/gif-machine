@@ -1,35 +1,48 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/styles.css';
-import Triangle from './js/triangle.js';
-import Rectangle from './js/rectangle.js';
 
-function handleTriangleForm(event) {
+function userInputForm(event) {
   event.preventDefault();
-  document.querySelector('#response').innerText = null;
-  const length1 = parseInt(document.querySelector('#length1').value);
-  const length2 = parseInt(document.querySelector('#length2').value);
-  const length3 = parseInt(document.querySelector('#length3').value);
-  const triangle = new Triangle(length1, length2, length3);
-  const response = triangle.checkType();
-  const pTag = document.createElement("p");
-  pTag.append(`Your result is: ${response}.`);
-  document.querySelector('#response').append(pTag);
+  const userInput = document.querySelector('#user-input').value;
+  document.querySelector('#user-input').value = null;
+  rememberToCallFunctionsYouDefineOutsideThisHandler()
+  /* this is where the api thing goes maybe?  we can use the 'userinput' variable to adjust the api query (like after the ?) 
+    https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}q=${userInput}&limit=25&offset=0&rating=g&lang=en
+  */
 }
-
-function handleRectangleForm(event) {
-  event.preventDefault();
-  document.querySelector('#response2').innerText = null;
-  const length1 = parseInt(document.querySelector('#rect-length1').value);
-  const length2 = parseInt(document.querySelector('#rect-length2').value);
-  const rectangle = new Rectangle(length1, length2);
-  const response = rectangle.getArea();
-  const pTag = document.createElement("p");
-  pTag.append(`The area of the rectangle is ${response}.`);
-  document.querySelector('#response2').append(pTag);
-}
-
 window.addEventListener("load", function() {
-  document.querySelector("#triangle-checker-form").addEventListener("submit", handleTriangleForm);
-  document.querySelector("#rectangle-area-form").addEventListener("submit", handleRectangleForm);
+  document.querySelector("#user-input-form").addEventListener("submit", userInputForm);
 });
+
+/* ummm, below is what needs to be discovered muahahaha*/
+export default class GifApiCall {  
+  static async getGif(fish) {
+    try {
+      const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}q=${userInput}&limit=25&offset=0&rating=g&lang=en`);
+      const jsonifiedResponse = await response.json();
+        //jsonifiedResponse.data.url or jsonifiedResponse.data.id for example
+
+
+      if (!response.ok) {
+        const errorMessage = `${response.status} ${response.statusText}
+        ${jsonifiedResponse.message}`;
+        throw new Error(errorMessage);
+      }
+      return jsonifiedResponse;
+    } catch(error) {
+      return error;
+    }
+  }
+}
+// Business Logic
+// this does something with the static
+async function getGif(fish) {
+  const response = await GifApiCall.getGif(fish);
+  if (response.main) {
+    printElements(response, fish);
+  } else {
+    printError(response, fish);
+  }
+}
+
