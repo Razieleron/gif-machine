@@ -7,7 +7,8 @@ import GifApiCall from './js/giphy.js';
 
 async function getGif(fish) {
   const response = await GifApiCall.getGif(fish);
-  if (response.main) {
+  console.log(response)
+  if (response.data) {
     printElements(response, fish);
   } else {
     printError(response, fish);
@@ -15,15 +16,27 @@ async function getGif(fish) {
 }
 
 // UI Logic
-//devtools URL
-// https://api.giphy.com/v1/gifs/search?api_key=7XyvDq4E7kk1NMLYWtiA5xOka37t4zHdq=a&limit=25&offset=0&rating=g&lang=en
-// https://api.giphy.com/v1/gifs/search?api_key=7XyvDq4E7kk1NMLYWtiA5xOka37t4zHd&q=a&limit=25&offset=0&rating=g&lang=en
-function printElements(fish) {
-  document.querySelector('#where-the-api-info-goes').setAttribute("imgblahrc", "jsonifiedResponse.data.url");
-  document.querySelector('#where-the-api-info-goes').innerText =`${fish}`; 
-  //  a.setAttribute("href", fish["images"]["url"]);
 
+function printElements(fish) {
+  const img = document.createElement('img');
+  img.setAttribute('src', fish.data[0].images.original.url)
+  document.querySelector('#where-the-api-info-goes').append(img);
 }
+
+// function printElements(fish) {
+//   let fishy = fish.data[0].images.downsized.url;//embed_url;//.images.looping.mp4; 
+//   // let p = document.querySelector("#where-the-api-info-goes");
+//   // let a = document.createAttribute("a", fishy); 
+
+
+//   document.querySelector('#where-the-api-info-goes').innerText = `${fishy}`;
+
+//   // p.append(a);
+  
+//   console.log("fish: ", fish);
+ 
+//   console.log("fishy: ", fishy);
+// }
 
 function printError() {
   //console.log("hi")
@@ -33,6 +46,7 @@ function userInputForm(event) {
   event.preventDefault();
   let fish = document.querySelector('#user-input').value;
   document.querySelector('#user-input').value = null;
+  // getGif(fish);
   getGif(fish);
   printElements(fish);
 }
