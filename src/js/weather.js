@@ -1,7 +1,7 @@
-export default class GifApiCall {  
-  static async getGif(fish) {
+export default class WeatherReport {  
+  static async getWeather(rain) {
     try {
-      const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}&q=${fish}&limit=25&offset=0&rating=g&lang=en`);
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${rain}&appid=${process.env.WEATHER_API_KEY}`);
       const jsonifiedResponse = await response.json();
       if (!response.ok) {
         const errorMessage = `${response.status} ${response.statusText}
@@ -14,3 +14,4 @@ export default class GifApiCall {
     }
   }
 }
+
