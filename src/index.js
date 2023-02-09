@@ -19,7 +19,7 @@ async function getGif(fish) {
 
 function printElements(fish) {
   const img = document.createElement('img');
-  img.setAttribute('src', fish.data[0].images.original.url);
+  img.setAttribute('src', fish.data[Math.floor(Math.random() * 24)].images.original.url);
   img.setAttribute('class', 'gif');
   document.querySelector('#where-the-api-info-goes').append(img);
 }
